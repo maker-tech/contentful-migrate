@@ -15,6 +15,7 @@
     "ctf-migrate": "./bin/ctf-migrate"
   },
   "scripts": {
+    "precommit": "npm test",
     "test": "npm run lint && npm run test:unit",
     "test:ci": "npm run lint && npm run test:all",
     "test:all": "mocha ./lib/__tests__/*.spec.js ./lib/**/__tests__/*.spec.js",
