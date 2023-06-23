@@ -9,5 +9,3 @@ node_modules
 migrations
 coverage
 errors-*.log
-
-.env*
