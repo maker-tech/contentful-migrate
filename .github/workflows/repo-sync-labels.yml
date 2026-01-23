@@ -1,0 +1,36 @@
+# This workflow keeps the repository's labels in sync with .github/labels.json,
+# ensuring any updates to label definitions (e.g. for Dependabot/PR categorization)
+# are automatically reflected on the GitHub repository.
+# This workflow is triggered by changes to .github/labels.json
+
+name: Repo - Sync Labels
+
+on:
+  # Run when labels.json or dependabot.yml changes
+  push:
+    branches: [dev]
+    paths:
+      - '.github/repo-labels.json'
+  # Trigger manually
+  workflow_dispatch:
+
+jobs:
+  sync-labels:
+    name: Repo - Sync Labels
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read # Required to checkout the repository
+      issues: write # Required to create/update labels on the repository
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Repo - Sync labels
+        uses: EndBug/label-sync@v2
+        with:
+          config-file: .github/repo-labels.json
+          # Don't delete labels not in config - preserves existing labels
+          delete-other-labels: false
+          # Dry run for testing - set to false for actual sync
+          dry-run: false
