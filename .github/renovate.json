@@ -1,0 +1,80 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended", ":ignoreUnstable"],
+  "timezone": "Pacific/Auckland",
+  "schedule": ["before 6am on monday"],
+  "prConcurrentLimit": 7,
+  "labels": ["dependencies", "automated"],
+  "commitMessagePrefix": "chore(deps):",
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "dependencies"],
+    "minimumReleaseAge": null
+  },
+  "minimumReleaseAge": "14 days",
+  "prCreation": "not-pending",
+  "packageRules": [
+    {
+      "description": "Vulnerability alerts - highest priority",
+      "matchCategories": ["security"],
+      "labels": ["security", "dependencies"],
+      "prPriority": 100
+    },
+    {
+      "description": "Development dependencies - minor/patch grouped",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dev-dependencies",
+      "labels": ["dependencies", "automated", "dev-deps"],
+      "minimumReleaseAge": "14 days",
+      "prPriority": 5
+    },
+    {
+      "description": "Production dependencies - minor/patch grouped (excluding core Contentful packages)",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "production-minor-patch",
+      "labels": ["dependencies", "automated", "prod-deps"],
+      "minimumReleaseAge": "14 days",
+      "prPriority": 10,
+      "matchPackageNames": [
+        "!contentful-management",
+        "!contentful-migration"
+      ]
+    },
+    {
+      "description": "Core Contentful packages - individual PRs for careful review",
+      "matchPackageNames": ["contentful-management", "contentful-migration"],
+      "labels": ["dependencies", "automated", "prod-deps"],
+      "minimumReleaseAge": "14 days",
+      "prPriority": 15
+    },
+    {
+      "description": "ESLint packages - group together",
+      "matchPackagePatterns": ["^eslint"],
+      "groupName": "eslint",
+      "labels": ["dependencies", "automated"],
+      "minimumReleaseAge": "14 days",
+      "prPriority": 5
+    },
+    {
+      "description": "husky - major version has breaking changes, keep on v0.x",
+      "matchPackageNames": ["husky"],
+      "allowedVersions": "<1.0.0"
+    },
+    {
+      "description": "mkdirp - v1.x has breaking API changes, keep on v0.x",
+      "matchPackageNames": ["mkdirp"],
+      "allowedVersions": "<1.0.0"
+    },
+    {
+      "description": "GitHub Actions - grouped",
+      "matchManagers": ["github-actions"],
+      "groupName": "github-actions",
+      "labels": ["dependencies", "github-actions"],
+      "commitMessagePrefix": "chore(ci):",
+      "minimumReleaseAge": "7 days",
+      "prPriority": 20
+    }
+  ]
+}
